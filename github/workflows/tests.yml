@@ -1,0 +1,26 @@
+name: API Tests
+
+on: [push]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v4
+
+    - uses: actions/setup-dotnet@v4
+      with:
+        dotnet-version: 8.0.x
+
+    - run: dotnet restore
+    - run: dotnet test
+
+    - run: |
+        npm install -g allure-commandline
+        allure generate allure-results -o allure-report
+
+    - uses: actions/upload-artifact@v4
+      with:
+        name: allure-report
+        path: allure-report
